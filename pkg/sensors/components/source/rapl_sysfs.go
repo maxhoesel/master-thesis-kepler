@@ -23,15 +23,14 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/sustainable-computing-io/kepler/pkg/config"
 	"k8s.io/klog/v2"
 )
 
 const (
 	// sysfs path templates
-	packageNamePathTemplate = "/sys/class/powercap/intel-rapl/intel-rapl:%d/"
-	eventNamePathTemplate   = "/sys/class/powercap/intel-rapl/intel-rapl:%d/intel-rapl:%d:%d/"
-	energyFile              = "energy_uj"
-	energyMaxRangeFile      = "max_energy_range_uj"
+	energyFile         = "energy_uj"
+	energyMaxRangeFile = "max_energy_range_uj"
 
 	// RAPL number of events (core, dram and uncore)
 	numRAPLEvents = 3
@@ -132,7 +131,7 @@ func (r *PowerSysfs) IsSystemCollectionSupported() bool {
 	// there are parts of code invokes this function
 	// use once to reduce IO
 	once.Do(func() {
-		_, err := os.ReadFile("/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj")
+		_, err := os.ReadFile(config.GetPowercapPath() + "/intel-rapl:0/energy_uj")
 		systemCollectionSupported = (err == nil)
 	})
 	return systemCollectionSupported

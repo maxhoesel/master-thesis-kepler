@@ -65,6 +65,7 @@ type KeplerConfig struct {
 	CPUArchOverride              string
 	MachineSpecFilePath          string
 	ExcludeSwapperProcess        bool
+	RAPLPath                     string
 }
 type MetricsConfig struct {
 	CoreUsageMetric    string
@@ -182,6 +183,7 @@ func getKeplerConfig() KeplerConfig {
 		EstimatorSelectFilter:        getConfig("ESTIMATOR_SELECT_FILTER", defaultMetricValue), // no filter
 		CPUArchOverride:              getConfig("CPU_ARCH_OVERRIDE", defaultCPUArchOverride),
 		ExcludeSwapperProcess:        getBoolConfig("EXCLUDE_SWAPPER_PROCESS", defaultExcludeSwapperProcess),
+		RAPLPath:                     getConfig("RAPL_PATH", "/sys/class/powercap/intel-rapl"),
 	}
 }
 
@@ -499,6 +501,10 @@ func IsExposeComponentPowerEnabled() bool {
 
 func IsEnabledMSR() bool {
 	return instance.Kepler.EnabledMSR
+}
+
+func GetPowercapPath() string {
+	return getConfig("RAPL_PATH", "/sys/class/powercap/intel-rapl")
 }
 
 func IsModelServerEnabled() bool {

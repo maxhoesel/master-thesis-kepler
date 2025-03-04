@@ -20,11 +20,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/sustainable-computing-io/kepler/pkg/config"
 )
 
 func detectEventPaths() {
 	for i := 0; i < numPackages; i++ {
-		packagePath := fmt.Sprintf(packageNamePathTemplate, i)
+		packagePath := fmt.Sprintf(config.GetPowercapPath()+"/intel-rapl:%d/", i)
 		data, err := os.ReadFile(packagePath + "name")
 		packageName := strings.TrimSpace(string(data))
 		if err != nil {
@@ -33,7 +35,7 @@ func detectEventPaths() {
 		eventPaths[packageName] = map[string]string{}
 		eventPaths[packageName][packageName] = packagePath
 		for j := 0; j < numRAPLEvents; j++ {
-			eventNamePath := fmt.Sprintf(eventNamePathTemplate, i, i, j)
+			eventNamePath := fmt.Sprintf(config.GetPowercapPath()+"/intel-rapl:%d/intel-rapl:%d:%d/", i, i, j)
 			data, err := os.ReadFile(eventNamePath + "name")
 			eventName := strings.TrimSpace(string(data))
 			if err != nil {
